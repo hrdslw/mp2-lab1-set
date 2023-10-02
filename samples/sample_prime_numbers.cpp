@@ -50,7 +50,7 @@ int main()
     }
   cout << endl;
   cout << "В первых " << n << " числах " << count << " простых" << endl;
-}*/
+*/}
 #else
 
 #include "tset.h"
