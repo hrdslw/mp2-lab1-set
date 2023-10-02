@@ -13,7 +13,7 @@ TBitField::TBitField(int len)
 		throw "Ошибка: отрицательное значение длины";
 	MemLen = len / 32 + 1;
 	BitLen = len;
-	pMem - new TELEM[MemLen];
+	pMem = new TELEM[MemLen];
 	for (int i = 0; i < MemLen; i++) {
 		pMem[i] = 0;
 	}
@@ -121,9 +121,13 @@ bool TBitField::operator==(const TBitField &bf) const // сравнение
 }
 
 
-int TBitField::operator!=(const TBitField &bf) const // сравнение
+bool TBitField::operator!=(const TBitField &bf) const // сравнение
 {
-  return 0;
+	if (*this == bf)
+		return false;
+	else
+		return true;
+  
 }
 
 TBitField TBitField::operator|(const TBitField &bf) // операция "или"
