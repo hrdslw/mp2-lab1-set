@@ -132,7 +132,18 @@ bool TBitField::operator!=(const TBitField &bf) const // сравнение
 
 TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 {
-	return*this;
+	int mlen = bf.BitLen;
+	if (BitLen > bf.BitLen)
+		mlen = BitLen;
+	TBitField res(mlen);
+	for (int i = 0; i < MemLen; i++) {
+		res.pMem[i] = pMem[i]; // при копировании может скопироваться в res лишний хвост, который испортит значение!
+	}
+	for (int i = 0; i < bf.MemLen; i++) {
+		res.pMem[i] = bf.pMem[i] | pMem[i];
+	}
+
+	return res;
 }
 
 TBitField TBitField::operator&(const TBitField &bf) // операция "и"
@@ -142,19 +153,42 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 
 TBitField TBitField::operator~(void) // отрицание
 {
+	for (int i = 0; i < MemLen; i++) {
+		pMem[i] = ~pMem[i];
+	}
 	return*this;
 }
 
 // ввод/вывод
 
-istream &operator>>(istream &istr, TBitField &bf) // ввод
+istream &operator>>(istream &is, TBitField &bf) // ввод
 {
-	return istr;
+	char a;
+	for (int i = 0; i < bf.MemLen; i++) {
+		bf.pMem[i] = 0;
+	}
+	for (int i = 0; i < bf.BitLen; i++) {
+		is >> a;
+		if (a == '1') 	
+			bf.SetBit(i);
+		else if (a == '0')
+			bf.ClrBit(i);		
+		else break;
+	}
+	return is;
 
 }
 
-ostream &operator<<(ostream &ostr, const TBitField &bf) // вывод
+ostream &operator<<(ostream &os, const TBitField &bf) // вывод
 {
-	return ostr;
+	for (int i = 0; i < bf.BitLen; i++)
+	{	
+		if (bf.GetBit(i))
+			os << '1';
+		else
+			os << '0';
+	}
+	os << endl;
+	return os;
 
 }
